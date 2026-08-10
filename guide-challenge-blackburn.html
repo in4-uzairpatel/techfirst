@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario Bank — Blackburn | Guide Challenge</title>
+<style>
+  :root {
+    --purple-deep: #4E259E;
+    --purple-light: #7147DC;
+    --teal-deep: #0C6382;
+    --teal-light: #5ED1DD;
+    --teal-pale: #9EEEF2;
+    --neutral-bg: #F5F6F8;
+    --neutral-border: #E5E5E5;
+    --neutral-grey: #64666D;
+    --neutral-black: #18191C;
+    --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: linear-gradient(160deg, var(--neutral-bg) 0%, #EDEBFA 55%, var(--teal-pale) 130%);
+    font-family: "Roboto", system-ui, -apple-system, sans-serif;
+    color: var(--neutral-black);
+  }
+  .stage {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px 48px;
+  }
+  .container {
+    width: 100%; max-width: 820px;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--purple-deep); font-weight: 700; text-decoration: none;
+    font-size: 14px; background: var(--white); padding: 8px 16px;
+    border-radius: 999px; box-shadow: 0 2px 8px rgba(78,37,158,0.12);
+    transition: transform 0.15s ease;
+  }
+  .back-link:hover { transform: translateX(-3px); }
+  
+  .panel {
+    background: var(--white);
+    border-radius: 22px;
+    box-shadow: 0 12px 32px rgba(24,25,28,0.10);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .panel::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+    background: linear-gradient(90deg, var(--purple-deep), var(--teal-light));
+  }
+  .kicker {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 12px;
+    font-weight: 700; color: var(--teal-deep); margin-bottom: 6px;
+  }
+  h1.title {
+    font-size: clamp(26px, 5vw, 36px); font-weight: 900;
+    color: var(--purple-deep); margin: 0 0 6px; line-height: 1.1;
+  }
+  .meta-tag {
+    display: inline-block; font-size: 13px; font-weight: 600;
+    color: var(--neutral-grey); margin-bottom: 24px;
+  }
+  
+  .instruction-box {
+    background: #F3EFEF; border-left: 4px solid var(--purple-deep);
+    border-radius: 12px; padding: 18px 20px; margin-bottom: 28px;
+  }
+  .instruction-box h3 {
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px;
+    font-weight: 800; color: var(--purple-deep); margin: 0 0 6px;
+  }
+  .instruction-box p {
+    margin: 0; font-size: 14px; line-height: 1.55; color: #333;
+  }
+
+  .section-heading {
+    font-size: 18px; font-weight: 800; color: var(--purple-deep);
+    margin: 28px 0 8px; display: flex; align-items: center; gap: 6px;
+  }
+
+  .sub-note {
+    font-size: 13.5px; color: var(--neutral-grey); margin-bottom: 20px; line-height: 1.45;
+  }
+
+  .org-block {
+    margin-bottom: 32px;
+  }
+  .org-header {
+    border-bottom: 2px solid var(--neutral-border);
+    padding-bottom: 6px; margin-bottom: 12px;
+  }
+  .org-name {
+    font-size: 20px; font-weight: 800; color: var(--purple-deep); margin: 0 0 2px;
+  }
+  .org-sub {
+    font-size: 13px; color: var(--teal-deep); font-weight: 600;
+  }
+
+  .scenario-table {
+    width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--neutral-border);
+  }
+  .scenario-table th, .scenario-table td {
+    padding: 12px 16px; text-align: left; vertical-align: top;
+  }
+  .scenario-table th {
+    background: var(--neutral-bg); font-size: 12px; font-weight: 700; color: var(--neutral-grey);
+    text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--neutral-border);
+  }
+  .scenario-table tr:not(:last-child) td {
+    border-bottom: 1px solid var(--neutral-border);
+  }
+  .scenario-table td.dept {
+    width: 32%; font-weight: 700; color: var(--neutral-black); font-size: 14px;
+    background: #FAF9FE;
+  }
+  .scenario-table td.desc {
+    font-size: 14px; line-height: 1.5; color: #2B2C30;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="container">
+      <div class="top-bar">
+        <a href="./?week=1&day=3" class="back-link">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          Back to Portal
+        </a>
+      </div>
+
+      <div class="panel">
+        <div class="kicker">Guide Challenge</div>
+        <h1 class="title">Scenario Bank — Blackburn</h1>
+        <div class="meta-tag">Week 1, Day 3 · Block 1 &amp; Week 2, Day 1 · Block 2 · AI Digital Champion</div>
+
+        <div class="instruction-box">
+          <h3>How to Use This</h3>
+          <p>Real employer, real department, real scenario - no fictional companies here. Draft your guide as if a genuine stranger walked in the door with this exact problem: not executing it on the organisation's actual real system, but applying one test at each step - could I actually do this, or would I need to ask a question first? Hand each team the scenario matching their own Day 1 organisation and department.</p>
+        </div>
+
+        <div class="section-heading">
+          <span>❯</span> Scenario Bank — One Per Department
+        </div>
+        <p class="sub-note">Match each team to their own Day 1 organisation and department. If a team's exact combination isn't listed for some reason, any scenario from the same organisation can be substituted.</p>
+
+        <!-- Organisation 1 -->
+        <div class="org-block">
+          <div class="org-header">
+            <h2 class="org-name">Blackburn with Darwen Borough Council</h2>
+            <div class="org-sub">Local Authority · Unitary Authority covering Blackburn and Darwen</div>
+          </div>
+          <table class="scenario-table">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Scenario Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="dept">Housing</td>
+                <td class="desc">A tenant says a repair was booked in three weeks ago but nobody's been out yet, and they want an update today.</td>
+              </tr>
+              <tr>
+                <td class="dept">Customer Services</td>
+                <td class="desc">A resident used the online Web Assistant chat but it couldn't answer their question, and now they want to speak to a person.</td>
+              </tr>
+              <tr>
+                <td class="dept">Adult Social Care</td>
+                <td class="desc">A family member has called on behalf of an elderly resident, worried that a scheduled visit didn't happen.</td>
+              </tr>
+              <tr>
+                <td class="dept">IT &amp; Digital Services</td>
+                <td class="desc">The My Council Services portal is showing an error for multiple residents trying to log in this morning.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Organisation 2 -->
+        <div class="org-block">
+          <div class="org-header">
+            <h2 class="org-name">Nybble</h2>
+            <div class="org-sub">IT support, cyber security &amp; AV solutions · Blackburn town centre</div>
+          </div>
+          <table class="scenario-table">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Scenario Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="dept">Client Support &amp; Helpdesk</td>
+                <td class="desc">A client's whole office can't print, and they need it working before a meeting in twenty minutes.</td>
+              </tr>
+              <tr>
+                <td class="dept">Cyber Security</td>
+                <td class="desc">A client has received a suspicious email and wants to know urgently whether it's safe to open.</td>
+              </tr>
+              <tr>
+                <td class="dept">AV &amp; Systems Installation</td>
+                <td class="desc">A newly installed video conferencing system worked perfectly in testing but won't connect during the client's first real meeting.</td>
+              </tr>
+              <tr>
+                <td class="dept">Software Development</td>
+                <td class="desc">A client says the website Nybble built for them has a broken contact form, and enquiries aren't coming through.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Organisation 3 -->
+        <div class="org-block">
+          <div class="org-header">
+            <h2 class="org-name">Star Academies</h2>
+            <div class="org-sub">Multi-academy trust · Headquartered in Blackburn</div>
+          </div>
+          <table class="scenario-table">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Scenario Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="dept">Central Education Team</td>
+                <td class="desc">A school is asking for the latest version of a shared curriculum resource, but isn't sure which version they currently have.</td>
+              </tr>
+              <tr>
+                <td class="dept">Estates &amp; Facilities</td>
+                <td class="desc">A school has reported a heating fault and needs to know whether it's urgent enough for an emergency callout.</td>
+              </tr>
+              <tr>
+                <td class="dept">HR &amp; Talent (Star Talent Academy)</td>
+                <td class="desc">A new teacher starting next week hasn't received their login details yet.</td>
+              </tr>
+              <tr>
+                <td class="dept">IT &amp; Digital Systems</td>
+                <td class="desc">A school's parent communication system sent the wrong message to the wrong year group by mistake.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Organisation 4 -->
+        <div class="org-block">
+          <div class="org-header">
+            <h2 class="org-name">Together Housing</h2>
+            <div class="org-sub">Housing association · Operating across Lancashire and Yorkshire</div>
+          </div>
+          <table class="scenario-table">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Scenario Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="dept">Repairs &amp; Maintenance</td>
+                <td class="desc">A tenant has reported the same repair issue for the third time and wants to know why it hasn't been fixed.</td>
+              </tr>
+              <tr>
+                <td class="dept">Tenancy &amp; Customer Services</td>
+                <td class="desc">A tenant is querying a rent statement that doesn't match what they think they've paid.</td>
+              </tr>
+              <tr>
+                <td class="dept">Development (New Homes)</td>
+                <td class="desc">A family expecting to move into a new development next month is asking whether it's still on track.</td>
+              </tr>
+              <tr>
+                <td class="dept">IT &amp; Digital Services</td>
+                <td class="desc">A tenant can't log into their online account to report a repair and is getting frustrated.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Organisation 5 -->
+        <div class="org-block">
+          <div class="org-header">
+            <h2 class="org-name">Brookhouse Aerospace</h2>
+            <div class="org-sub">Aerospace manufacturing · Darwen, Lancashire</div>
+          </div>
+          <table class="scenario-table">
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Scenario Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="dept">Production — Composites &amp; Metallics</td>
+                <td class="desc">A component has come off the production line slightly outside spec and needs to be logged and escalated.</td>
+              </tr>
+              <tr>
+                <td class="dept">Quality &amp; Compliance</td>
+                <td class="desc">A customer is asking for documentation proving a batch of parts meets a specific safety standard.</td>
+              </tr>
+              <tr>
+                <td class="dept">Engineering &amp; Design</td>
+                <td class="desc">A new component design looks fine on paper, but the production team says it's difficult to actually manufacture.</td>
+              </tr>
+              <tr>
+                <td class="dept">IT &amp; Digital Systems</td>
+                <td class="desc">The system tracking production and quality data has gone down and nobody can log new results.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

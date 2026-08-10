@@ -1,0 +1,57 @@
+{
+  "week": 3,
+  "title": "Week 3: Advanced Application & Launch",
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1: Deployment & Hosting",
+      "subtitle": "Shipping your work to GitHub Pages and production",
+      "links": [
+        {
+          "name": "GitHub Pages Guide",
+          "href": "https://pages.github.com",
+          "type": "workshop"
+        },
+        {
+          "name": "Kahoot Deployment Trivia",
+          "href": "https://kahoot.it/join",
+          "type": "quiz"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: Portfolio Polish",
+      "subtitle": "Showcasing projects and refining presentations",
+      "links": [
+        {
+          "name": "Portfolio Checklist",
+          "href": "https://docs.google.com",
+          "type": "doc"
+        },
+        {
+          "name": "Peer Review Session",
+          "href": "https://forms.google.com",
+          "type": "form"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Final Showcase & Graduation",
+      "subtitle": "Project presentations and celebration",
+      "links": [
+        {
+          "name": "Final Project Showcase",
+          "href": "https://docs.google.com/presentation",
+          "type": "slides"
+        },
+        {
+          "name": "Course Certificate & Exit Survey",
+          "href": "https://forms.google.com",
+          "type": "form"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Bot or Human?</title>
+<style>
+  :root {
+    --purple-deep: #4E259E;
+    --purple-light: #7147DC;
+    --teal-deep: #0C6382;
+    --teal-light: #5ED1DD;
+    --teal-pale: #9EEEF2;
+    --neutral-bg: #F5F6F8;
+    --neutral-border: #E5E5E5;
+    --neutral-grey: #64666D;
+    --neutral-black: #18191C;
+    --white: #FFFFFF;
+    --error: #B3372E;
+  }
+  * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: linear-gradient(160deg, var(--neutral-bg) 0%, #EDEBFA 55%, var(--teal-pale) 130%);
+    font-family: "Roboto", Arial, sans-serif;
+    color: var(--neutral-black);
+    overflow-x: hidden;
+  }
+  .stage { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px 16px 40px; position: relative; }
+
+  .chevron { display: inline-block; width: 0.55em; height: 1em; position: relative; }
+  .chevron::before, .chevron::after { content: ""; position: absolute; width: 62%; height: 22%; border-radius: 3px; background: currentColor; }
+  .chevron::before { top: 12%; left: 0; transform: rotate(45deg); transform-origin: left top; }
+  .chevron::after { bottom: 12%; left: 0; transform: rotate(-45deg); transform-origin: left bottom; }
+  .bg-chevrons { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.06; overflow: hidden; }
+  .bg-chevrons .chevron { position: absolute; width: 90px; height: 160px; color: var(--purple-deep); }
+
+  .card-area { width: 100%; max-width: 620px; z-index: 1; }
+  .panel { background: var(--white); border-radius: 22px; box-shadow: 0 12px 32px rgba(24,25,28,0.10); padding: 30px 26px; position: relative; overflow: hidden; }
+  .panel::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--purple-deep), var(--teal-light)); }
+
+  .start-screen, .results-screen { text-align: center; }
+  .kicker { text-transform: uppercase; letter-spacing: 0.14em; font-size: 12px; font-weight: 700; color: var(--teal-deep); margin-bottom: 10px; }
+  h1.game-title { font-size: clamp(28px, 6vw, 40px); font-weight: 900; margin: 0 0 14px; color: var(--purple-deep); line-height: 1.05; }
+  h1.game-title .accent { color: var(--teal-deep); }
+  .lede { font-size: 15px; color: var(--neutral-grey); line-height: 1.55; max-width: 440px; margin: 0 auto 20px; }
+
+  .goal-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0 auto 24px; max-width: 460px; }
+  .goal-chip { display: flex; align-items: center; gap: 6px; background: var(--neutral-bg); border: 2px solid var(--neutral-border); border-radius: 999px; padding: 7px 12px; font-size: 12px; font-weight: 700; color: var(--neutral-black); }
+  .goal-chip.unlocked { border-color: var(--teal-deep); background: #EAF6F8; color: var(--teal-deep); }
+  .goal-chip .icon { font-size: 14px; }
+
+  .btn { appearance: none; border: none; cursor: pointer; font-family: inherit; font-weight: 700; border-radius: 14px; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease; }
+  .btn:focus-visible { outline: 3px solid var(--teal-deep); outline-offset: 3px; }
+  .btn-primary { background: var(--purple-deep); color: var(--white); font-size: 18px; padding: 15px 38px; box-shadow: 0 8px 20px rgba(78,37,158,0.30); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(78,37,158,0.38); }
+  .btn-primary:active { transform: translateY(0); }
+  .session-best-line { font-size: 12px; color: var(--neutral-grey); margin-top: 16px; }
+  .session-best-line strong { color: var(--purple-deep); }
+
+  /* ---------- Game HUD ---------- */
+  .hud { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 620px; margin-bottom: 14px; z-index: 1; gap: 10px; }
+  .hud-stat { display: flex; flex-direction: column; align-items: center; background: var(--white); border-radius: 14px; padding: 8px 14px; box-shadow: 0 4px 14px rgba(24,25,28,0.08); min-width: 68px; }
+  .hud-stat .val { font-size: 20px; font-weight: 900; color: var(--purple-deep); line-height: 1; }
+  .hud-stat .lab { font-size: 9px; font-weight: 700; color: var(--neutral-grey); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+  .hud-timer { flex: 1; text-align: center; }
+  .timer-num { font-size: 34px; font-weight: 900; color: var(--teal-deep); line-height: 1; font-variant-numeric: tabular-nums; }
+  .timer-bar-track { height: 8px; background: var(--neutral-border); border-radius: 4px; margin-top: 6px; overflow: hidden; }
+  .timer-bar-fill { height: 100%; background: linear-gradient(90deg, var(--teal-deep), var(--teal-light)); border-radius: 4px; transition: width 0.2s linear; }
+  .timer-bar-fill.urgent { background: linear-gradient(90deg, var(--error), #E07A6E); }
+
+  /* ---------- Message card ---------- */
+  .message-wrap { position: relative; }
+  .message-card {
+    background: var(--neutral-bg);
+    border: 3px solid var(--neutral-border);
+    border-radius: 18px;
+    padding: 28px 24px;
+    min-height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 18px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .message-card.flash-correct { border-color: var(--teal-deep); background: #EAF6F8; }
+  .message-card.flash-wrong { border-color: var(--error); background: #FBEAE8; }
+  .message-text { font-size: clamp(17px, 4vw, 21px); font-weight: 500; line-height: 1.4; color: var(--neutral-black); }
+  .message-text .quote-mark { color: var(--purple-light); font-weight: 900; font-size: 1.15em; }
+
+  .tell-tag {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--purple-deep);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 999px;
+    opacity: 0;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(78,37,158,0.3);
+    pointer-events: none;
+  }
+  .tell-tag.show { animation: tell-pop 0.7s ease forwards; }
+  @keyframes tell-pop {
+    0% { opacity: 0; transform: translateX(-50%) translateY(4px) scale(0.9); }
+    20% { opacity: 1; transform: translateX(-50%) translateY(-2px) scale(1.02); }
+    75% { opacity: 1; transform: translateX(-50%) translateY(-2px) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.96); }
+  }
+
+  .answers-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .answer-btn {
+    font-size: 20px;
+    font-weight: 900;
+    padding: 22px 10px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .answer-btn:active { transform: scale(0.96); }
+  .answer-btn.bot-btn { background: var(--purple-deep); color: var(--white); box-shadow: 0 8px 18px rgba(78,37,158,0.30); }
+  .answer-btn.human-btn { background: var(--teal-deep); color: var(--white); box-shadow: 0 8px 18px rgba(12,99,130,0.30); }
+  .answer-btn:focus-visible { outline: 3px solid var(--purple-light); outline-offset: 3px; }
+
+  /* ---------- Results ---------- */
+  .results-stats { display: flex; justify-content: center; gap: 24px; margin: 20px 0; }
+  .stat { text-align: center; }
+  .stat-value { font-size: 32px; font-weight: 900; color: var(--purple-deep); line-height: 1; }
+  .stat-label { font-size: 11px; font-weight: 700; color: var(--neutral-grey); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+  .new-best-banner {
+    background: linear-gradient(90deg, var(--purple-deep), var(--purple-light));
+    color: var(--white);
+    font-weight: 900;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: rise 0.5s ease forwards;
+  }
+  .badges-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 16px 0; }
+  .badge-chip { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; border: 2px solid var(--neutral-border); background: var(--white); color: var(--neutral-grey); }
+  .badge-chip.earned { border-color: var(--teal-deep); background: var(--teal-deep); color: var(--white); }
+  .badge-chip.newly-earned { animation: badge-pop 0.6s ease; }
+  @keyframes badge-pop { 0% { transform: scale(0.7); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  @keyframes rise { to { opacity: 1; } }
+  .results-note { font-size: 14px; color: var(--neutral-grey); margin-top: 10px; line-height: 1.5; }
+
+  .fade-in { animation: fadein 0.3s ease; }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div class="bg-chevrons" aria-hidden="true" id="bgChevrons"></div>
+
+<div class="stage">
+  <div class="card-area">
+
+    <!-- START -->
+    <div class="panel start-screen" id="startScreen">
+      <div class="kicker">60 Seconds. Fast Calls.</div>
+      <h1 class="game-title">Bot or <span class="accent">Human?</span></h1>
+      <p class="lede">A message flashes up. You've got one second to decide: did a person write this, or AI? Tap fast, chain your streak, beat your own best.</p>
+      <div class="goal-row" id="goalRow">
+        <div class="goal-chip" id="chipQuick"><span class="icon">⚡</span> Score 15+</div>
+        <div class="goal-chip" id="chipStreak"><span class="icon">🎯</span> 10-streak</div>
+        <div class="goal-chip" id="chipFlawless"><span class="icon">🏆</span> Flawless round</div>
+      </div>
+      <button class="btn btn-primary" id="startBtn">Start — 60s ➤</button>
+      <div class="session-best-line" id="sessionBestLine">No runs yet this session — be the first.</div>
+    </div>
+
+    <!-- GAME -->
+    <div id="gameWrap" style="display:none;">
+      <div class="hud">
+        <div class="hud-stat"><div class="val" id="hudScore">0</div><div class="lab">Score</div></div>
+        <div class="hud-timer">
+          <div class="timer-num" id="timerNum">60</div>
+          <div class="timer-bar-track"><div class="timer-bar-fill" id="timerBar" style="width:100%"></div></div>
+        </div>
+        <div class="hud-stat"><div class="val" id="hudStreak">0</div><div class="lab">Streak</div></div>
+      </div>
+      <div class="panel">
+        <div class="message-wrap">
+          <div class="message-card" id="messageCard">
+            <div class="message-text" id="messageText"></div>
+          </div>
+          <div class="tell-tag" id="tellTag"></div>
+        </div>
+        <div class="answers-row">
+          <button class="answer-btn bot-btn" id="botBtn" type="button">🤖 BOT</button>
+          <button class="answer-btn human-btn" id="humanBtn" type="button">👤 HUMAN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="panel results-screen" id="resultsScreen" style="display:none;">
+      <div class="kicker">Round Over</div>
+      <h1 class="game-title" style="font-size:clamp(24px,5vw,32px);" id="resultsTitle">Nice Run</h1>
+      <div id="newBestBanner"></div>
+      <div class="results-stats">
+        <div class="stat"><div class="stat-value" id="statScore">0</div><div class="stat-label">Score</div></div>
+        <div class="stat"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Best streak</div></div>
+      </div>
+      <div class="badges-row" id="badgesRow">
+        <div class="badge-chip" id="badgeQuick"><span class="icon">⚡</span> Quickfire</div>
+        <div class="badge-chip" id="badgeStreak2"><span class="icon">🎯</span> Sharp Eye</div>
+        <div class="badge-chip" id="badgeFlawless"><span class="icon">🏆</span> Flawless</div>
+      </div>
+      <p class="results-note" id="resultsNote"></p>
+      <button class="btn btn-primary" id="playAgainBtn" style="margin-top:14px;">Play Again ➤</button>
+      <div class="session-best-line" id="sessionBestLine2"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const MESSAGES = [
+    { text: "I apologise for the inconvenience. Your request has been received and is being processed.", isBot: true, tell: "Generic apology + processing language" },
+    { text: "Thank you for reaching out! I'd be happy to help you with that today.", isBot: true, tell: "Overly cheerful stock opener" },
+    { text: "I understand your frustration. Let me provide you with three possible solutions.", isBot: true, tell: "Numbered-solution structure" },
+    { text: "Your ticket has been escalated to the appropriate department for further review.", isBot: true, tell: "Passive, formal escalation language" },
+    { text: "I apologise, but I do not have access to that information at this time.", isBot: true, tell: "Formal limitation phrasing" },
+    { text: "Based on the information provided, here are the recommended next steps:", isBot: true, tell: "\u2018Based on the information provided\u2019" },
+    { text: "I'm sorry to hear that. Rest assured, we are working to resolve this quickly.", isBot: true, tell: "\u2018Rest assured\u2019 phrasing" },
+    { text: "Could you please confirm your account details so I can assist further?", isBot: true, tell: "Overly polite formal request" },
+    { text: "I appreciate your patience while we look into this matter for you.", isBot: true, tell: "Generic patience appreciation" },
+    { text: "Thank you for your message. I will do my best to assist you today.", isBot: true, tell: "Generic stock thank-you" },
+    { text: "I completely understand how that could be frustrating for you.", isBot: true, tell: "Empathy statement with no specifics" },
+    { text: "Here is a summary of the steps we discussed, for your reference.", isBot: true, tell: "Unsolicited tidy summary" },
+    { text: "I want to ensure I address all aspects of your query accurately.", isBot: true, tell: "Overly formal precision language" },
+    { text: "Please let me know if there is anything else I can help with today.", isBot: true, tell: "Generic stock closing line" },
+    { text: "ugh sorry about that, let me check what's going on", isBot: false, tell: "Casual \u2018ugh\u2019 opener, informal tone" },
+    { text: "Oh no, that's annoying, one sec I'll ask my manager", isBot: false, tell: "Personal reaction + specific action" },
+    { text: "yeah I see it too, weird, give me 2 mins", isBot: false, tell: "Casual confirmation, exact time" },
+    { text: "Honestly not sure why it's doing that, let me have a poke around", isBot: false, tell: "Idiom: \u2018have a poke around\u2019" },
+    { text: "Sorry for the wait!! just got back from lunch", isBot: false, tell: "Personal context, double punctuation" },
+    { text: "ah I think I know what's happened actually", isBot: false, tell: "Casual \u2018ah\u2019 + realisation" },
+    { text: "That's odd, mine's working fine, what browser are you on?", isBot: false, tell: "Personal comparison + follow-up" },
+    { text: "no worries at all, happens more than you'd think", isBot: false, tell: "Idiomatic reassurance" },
+    { text: "Just spoke to the dev team, they're looking into it now", isBot: false, tell: "Specific real-world reference" },
+    { text: "haha yeah that bug's been annoying everyone this week", isBot: false, tell: "\u2018haha\u2019 + shared complaint" },
+    { text: "Give me two secs, just grabbing a coffee then I'll dig in", isBot: false, tell: "Irrelevant personal detail" },
+    { text: "oops my bad, I sent you the wrong link earlier", isBot: false, tell: "Casually admits own mistake" },
+    { text: "Not gonna lie, this one's got me stumped for a sec", isBot: false, tell: "\u2018Not gonna lie\u2019, casual admission" },
+    { text: "back now, sorry! let's sort this out", isBot: false, tell: "Personal absence reference" },
+  ];
+
+  const ROUND_SECONDS = 60;
+  let deck = [];
+  let deckIndex = 0;
+  let score = 0;
+  let streak = 0;
+  let bestStreakThisRound = 0;
+  let wrongCount = 0;
+  let timeLeft = ROUND_SECONDS;
+  let timerInterval = null;
+  let acceptingInput = true;
+
+  let sessionBestScore = 0;
+  let sessionBestStreak = 0;
+  const achievements = { quick: false, streak: false, flawless: false };
+
+  const startScreen = document.getElementById('startScreen');
+  const gameWrap = document.getElementById('gameWrap');
+  const resultsScreen = document.getElementById('resultsScreen');
+  const messageCard = document.getElementById('messageCard');
+  const messageText = document.getElementById('messageText');
+  const tellTag = document.getElementById('tellTag');
+  const hudScore = document.getElementById('hudScore');
+  const hudStreak = document.getElementById('hudStreak');
+  const timerNum = document.getElementById('timerNum');
+  const timerBar = document.getElementById('timerBar');
+  const botBtn = document.getElementById('botBtn');
+  const humanBtn = document.getElementById('humanBtn');
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildDeck() {
+    deck = shuffle(MESSAGES);
+    deckIndex = 0;
+  }
+
+  function nextMessage() {
+    if (deckIndex >= deck.length) {
+      deck = shuffle(MESSAGES);
+      deckIndex = 0;
+    }
+    const item = deck[deckIndex++];
+    messageText.innerHTML = `<span class="quote-mark">&ldquo;</span>${item.text}<span class="quote-mark">&rdquo;</span>`;
+    messageCard.classList.remove('flash-correct', 'flash-wrong');
+    return item;
+  }
+
+  let currentItem = null;
+
+  function startRound() {
+    score = 0; streak = 0; bestStreakThisRound = 0; wrongCount = 0; timeLeft = ROUND_SECONDS;
+    acceptingInput = true;
+    buildDeck();
+    hudScore.textContent = '0';
+    hudStreak.textContent = '0';
+    timerNum.textContent = String(ROUND_SECONDS);
+    timerBar.style.width = '100%';
+    timerBar.classList.remove('urgent');
+    startScreen.style.display = 'none';
+    resultsScreen.style.display = 'none';
+    gameWrap.style.display = 'block';
+    currentItem = nextMessage();
+    timerInterval = setInterval(tick, 1000);
+  }
+
+  function tick() {
+    timeLeft--;
+    timerNum.textContent = String(Math.max(timeLeft, 0));
+    timerBar.style.width = `${(timeLeft / ROUND_SECONDS) * 100}%`;
+    if (timeLeft <= 10) timerBar.classList.add('urgent');
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      acceptingInput = false;
+      setTimeout(endRound, 250);
+    }
+  }
+
+  function showTell(text) {
+    tellTag.textContent = text;
+    tellTag.classList.remove('show');
+    void tellTag.offsetWidth;
+    tellTag.classList.add('show');
+  }
+
+  function handleGuess(guessBot) {
+    if (!acceptingInput || timeLeft <= 0) return;
+    const correct = guessBot === currentItem.isBot;
+    if (correct) {
+      score++; streak++;
+      bestStreakThisRound = Math.max(bestStreakThisRound, streak);
+      messageCard.classList.add('flash-correct');
+    } else {
+      wrongCount++; streak = 0;
+      messageCard.classList.remove('flash-correct');
+      messageCard.classList.add('flash-wrong');
+    }
+    hudScore.textContent = String(score);
+    hudStreak.textContent = String(streak);
+    showTell((currentItem.isBot ? 'BOT \u2014 ' : 'HUMAN \u2014 ') + currentItem.tell);
+    acceptingInput = false;
+    setTimeout(() => {
+      if (timeLeft > 0) {
+        currentItem = nextMessage();
+        acceptingInput = true;
+      }
+    }, 420);
+  }
+
+  botBtn.addEventListener('click', () => handleGuess(true));
+  humanBtn.addEventListener('click', () => handleGuess(false));
+
+  function endRound() {
+    gameWrap.style.display = 'none';
+    resultsScreen.style.display = 'block';
+    resultsScreen.classList.add('fade-in');
+
+    const newBestScore = score > sessionBestScore;
+    const newBestStreak = bestStreakThisRound > sessionBestStreak;
+    if (newBestScore) sessionBestScore = score;
+    if (newBestStreak) sessionBestStreak = bestStreakThisRound;
+
+    document.getElementById('statScore').textContent = score;
+    document.getElementById('statStreak').textContent = bestStreakThisRound;
+
+    const banner = document.getElementById('newBestBanner');
+    banner.innerHTML = (newBestScore || newBestStreak) ? '<div class="new-best-banner">\u2728 New personal best!</div>' : '';
+
+    const gotQuick = score >= 15;
+    const gotStreak = bestStreakThisRound >= 10;
+    const gotFlawless = wrongCount === 0 && score >= 10;
+
+    const bq = document.getElementById('badgeQuick');
+    const bs = document.getElementById('badgeStreak2');
+    const bf = document.getElementById('badgeFlawless');
+    [ [bq, gotQuick, 'quick'], [bs, gotStreak, 'streak'], [bf, gotFlawless, 'flawless'] ].forEach(([el, got, key]) => {
+      el.classList.remove('newly-earned');
+      if (got) {
+        el.classList.add('earned');
+        if (!achievements[key]) { achievements[key] = true; el.classList.add('newly-earned'); }
+      }
+    });
+
+    const note = document.getElementById('resultsNote');
+    if (gotFlawless) note.textContent = "Zero wrong, all the way through \u2014 that's a flawless round.";
+    else if (gotStreak) note.textContent = "Double-digit streak. Go again and see if you can keep it going to the end.";
+    else if (gotQuick) note.textContent = "Score of 15+ \u2014 solid pace. Chase the streak badge next.";
+    else note.textContent = `Best streak this round: ${bestStreakThisRound}. Play again and beat it.`;
+
+    updateSessionBestLines();
+  }
+
+  function updateSessionBestLines() {
+    const text = sessionBestScore > 0
+      ? `Session best \u2014 Score: <strong>${sessionBestScore}</strong> &nbsp;\u00b7&nbsp; Streak: <strong>${sessionBestStreak}</strong>`
+      : 'No runs yet this session \u2014 be the first.';
+    document.getElementById('sessionBestLine').innerHTML = text;
+    document.getElementById('sessionBestLine2').innerHTML = text;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', startRound);
+  document.getElementById('playAgainBtn').addEventListener('click', startRound);
+
+  (function scatterChevrons() {
+    const holder = document.getElementById('bgChevrons');
+    const positions = [
+      {top: '5%', left: '8%', rot: '10deg'}, {top: '70%', left: '85%', rot: '-15deg'},
+      {top: '40%', left: '92%', rot: '20deg'}, {top: '85%', left: '5%', rot: '-5deg'},
+    ];
+    positions.forEach(p => {
+      const c = document.createElement('div');
+      c.className = 'chevron';
+      c.style.top = p.top; c.style.left = p.left; c.style.transform = `rotate(${p.rot})`;
+      holder.appendChild(c);
+    });
+  })();
+</script>
+
+</body>
+</html>

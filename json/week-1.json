@@ -1,0 +1,62 @@
+{
+  "week": 1,
+  "title": "Week 1: Foundation & Kickoff",
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1: Getting Started",
+      "subtitle": "Program introduction & essential tools setup",
+      "links": [
+        {
+          "name": "Job Unlocked",
+          "href": "./w1d1.html",
+          "type": "workshop"
+        },
+        {
+          "name": "Kahoot Live Quiz",
+          "href": "https://kahoot.it/join",
+          "type": "quiz"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: Core Concepts",
+      "subtitle": "Deep dive into problem solving & technical foundations",
+      "links": [
+        {
+          "name": "Bot or Human",
+          "href": "./w1d2.html",
+          "type": "workshop"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Guide Challenge & AI",
+      "subtitle": "Scenario Bank exercises & micro:bit Create AI",
+      "links": [
+        {
+          "name": "Scenario Bank — Blackpool",
+          "href": "./guide-challenge-blackpool.html",
+          "type": "workshop"
+        },
+        {
+          "name": "Scenario Bank — Wigan",
+          "href": "./guide-challenge-wigan.html",
+          "type": "workshop"
+        },
+        {
+          "name": "Scenario Bank — Blackburn",
+          "href": "./guide-challenge-blackburn.html",
+          "type": "workshop"
+        },
+        {
+          "name": "micro:bit Create AI",
+          "href": "https://createai.microbit.org/",
+          "type": "resource"
+        }
+      ]
+    }
+  ]
+}

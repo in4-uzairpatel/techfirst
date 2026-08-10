@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop Portal</title>
+  <meta name="description" content="Interactive workshop schedule and learning resource portal.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- jQuery 3.7.1 -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+  <!-- Tailwind CSS v4 Browser Build -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      min-height: 100vh;
+      color: #f8fafc;
+    }
+
+    h1, h2, h3, .font-heading {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Custom Glassmorphism Styles */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-list-item {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .glass-list-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateX(4px);
+      box-shadow: 0 8px 24px -8px rgba(168, 85, 247, 0.25);
+    }
+
+    .day-pill-active {
+      background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 16px -2px rgba(6, 182, 212, 0.4);
+    }
+  </style>
+</head>
+<body class="antialiased text-slate-100 flex flex-col justify-between">
+
+  <!-- Background Decorative Glows -->
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none -translate-y-1/2"></div>
+  <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none translate-y-1/2"></div>
+
+  <div class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+
+    <!-- Configurable Header Section -->
+    <header class="text-center mb-8">
+      <!-- Row container for logos -->
+      <div id="portal-logos-container" class="flex flex-nowrap items-center justify-center gap-3 sm:gap-6 md:gap-8 mb-6 hidden max-w-full overflow-hidden"></div>
+
+      <!-- Divider line between logos and header text -->
+      <div class="w-full max-w-md mx-auto border-t border-slate-700/60 my-6"></div>
+
+      <h1 id="portal-title" class="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-purple-200 bg-clip-text text-transparent mb-2">
+        Workshop Portal
+      </h1>
+      <p id="portal-subtitle" class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
+        Select a day below to access your guides, tasks, and live tools.
+      </p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main>
+      <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        
+        <!-- Day Selector Pills & Week Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-700/50">
+          <div>
+            <span id="current-week-label" class="text-xs font-bold uppercase tracking-wider text-purple-400">Week Schedule</span>
+            <h2 id="current-week-title" class="text-xl sm:text-2xl font-bold text-white">Loading schedule...</h2>
+          </div>
+
+          <!-- Day Navigation Pills -->
+          <div id="day-nav" class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" aria-label="Day selection">
+            <!-- Day pills dynamically injected here -->
+          </div>
+        </div>
+
+        <!-- Dynamic Content List Section -->
+        <section id="day-content" class="space-y-4">
+          <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+            <svg class="animate-spin h-8 w-8 text-purple-500 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p>Loading workshop resources...</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- App Script -->
+  <script>
+    $(document).ready(function() {
+      let currentWeekData = null;
+
+      // Helper to parse URL Query Parameters
+      function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        let week = parseInt(params.get('week')) || 1;
+        let day = parseInt(params.get('day')) || 1;
+        return { week, day };
+      }
+
+      // Update URL with history pushState
+      function updateURL(week, day, replace = false) {
+        const newUrl = `?week=${week}&day=${day}`;
+        if (replace) {
+          window.history.replaceState({ week, day }, '', newUrl);
+        } else {
+          window.history.pushState({ week, day }, '', newUrl);
+        }
+      }
+
+      // Icon generator based on resource type
+      function getResourceIcon(type) {
+        switch((type || '').toLowerCase()) {
+          case 'workshop':
+            return `<svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>`;
+          case 'quiz':
+            return `<svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`;
+          case 'slides':
+            return `<svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12H4z"/></svg>`;
+          case 'form':
+          case 'feedback':
+            return `<svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`;
+          default:
+            return `<svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>`;
+        }
+      }
+
+      // Load header config from json/header.json (or fallback to json/config.json)
+      function loadHeaderConfig() {
+        $.getJSON('json/header.json')
+          .done(applyHeaderSettings)
+          .fail(function() {
+            $.getJSON('json/config.json').done(applyHeaderSettings);
+          });
+      }
+
+      function applyHeaderSettings(data) {
+        if (!data) return;
+        if (data.title) $('#portal-title').text(data.title);
+        if (data.subtitle) $('#portal-subtitle').text(data.subtitle);
+
+        // Render logo row with height limit in rem
+        const $logoContainer = $('#portal-logos-container').empty();
+        const heightRem = data.logoHeightRem || data.logoHeight || 3;
+        
+        let logosList = [];
+        if (Array.isArray(data.logos)) {
+          logosList = data.logos.map(item => typeof item === 'string' ? { src: item, alt: 'Logo' } : item);
+        } else if (data.logo) {
+          logosList = [{ src: data.logo, alt: data.logoAlt || 'Logo' }];
+        }
+
+        if (logosList.length > 0) {
+          logosList.forEach(logoItem => {
+            if (!logoItem.src) return;
+            const $img = $(`
+              <img src="${logoItem.src}" alt="${logoItem.alt || 'Logo'}" 
+                   style="max-height: ${heightRem}rem; height: auto; width: auto;" 
+                   class="object-contain max-w-[22vw] sm:max-w-[20%] shrink min-w-0" 
+                   onerror="this.style.display='none'">
+            `);
+            $logoContainer.append($img);
+          });
+          $logoContainer.removeClass('hidden');
+        } else {
+          $logoContainer.addClass('hidden');
+        }
+      }
+
+      // Initialize Portal Router
+      function initPortal() {
+        loadHeaderConfig();
+        const query = getQueryParams();
+        loadWeekData(query.week, query.day, true);
+      }
+
+      // Load specific week JSON manifest based on URL
+      function loadWeekData(weekId, dayId, isInitial = false) {
+        const activeWeekId = weekId || 1;
+
+        // Show loading state in content area
+        $('#day-content').html(`
+          <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+            <svg class="animate-spin h-8 w-8 text-purple-500 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p>Loading Week ${activeWeekId} schedule...</p>
+          </div>
+        `);
+
+        $.getJSON(`json/week-${activeWeekId}.json`)
+          .done(function(data) {
+            currentWeekData = data;
+            
+            // Validate target day
+            const validDays = data.days.map(d => d.day);
+            const activeDayId = validDays.includes(dayId) ? dayId : validDays[0];
+
+            updateURL(activeWeekId, activeDayId, isInitial);
+            renderDayHeaderAndPills(data, activeDayId);
+            renderDayContent(data, activeDayId);
+          })
+          .fail(function() {
+            $('#day-content').html(`
+              <div class="p-8 text-center text-rose-300 glass-list-item rounded-2xl">
+                <svg class="w-12 h-12 mx-auto mb-3 text-rose-400 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <p class="font-semibold text-lg">Unable to load Week ${activeWeekId} schedule.</p>
+                <p class="text-xs text-slate-400 mt-1">Please ensure <code>json/week-${activeWeekId}.json</code> exists.</p>
+              </div>
+            `);
+          });
+      }
+
+      // Render Header and Day pills
+      function renderDayHeaderAndPills(weekData, activeDayId) {
+        $('#current-week-label').text(`Week ${weekData.week}`);
+        $('#current-week-title').text(weekData.title || `Week ${weekData.week} Content`);
+
+        const $dayNav = $('#day-nav').empty();
+        weekData.days.forEach(d => {
+          const isActive = d.day === activeDayId;
+          const $pill = $(`
+            <button class="day-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${isActive ? 'day-pill-active' : 'text-slate-300 hover:bg-white/10'}" data-day="${d.day}">
+              Day ${d.day}
+            </button>
+          `);
+          $dayNav.append($pill);
+        });
+
+        // Event listener for Day pill clicks
+        $dayNav.off('click', '.day-pill').on('click', '.day-pill', function() {
+          const selectedDay = parseInt($(this).data('day'));
+          const query = getQueryParams();
+          if (query.day !== selectedDay) {
+            updateURL(query.week, selectedDay);
+            renderDayHeaderAndPills(currentWeekData, selectedDay);
+            renderDayContent(currentWeekData, selectedDay);
+          }
+        });
+      }
+
+      // Render Resource Links as a List
+      function renderDayContent(weekData, activeDayId) {
+        const dayData = weekData.days.find(d => d.day === activeDayId);
+        const $container = $('#day-content').empty();
+
+        if (!dayData || !dayData.links || dayData.links.length === 0) {
+          $container.html(`
+            <div class="p-8 text-center text-slate-400 glass-list-item rounded-2xl">
+              <p class="text-base font-medium">No resources scheduled for this day yet.</p>
+            </div>
+          `);
+          return;
+        }
+
+        // Subtitle / Overview for Day if provided
+        if (dayData.title || dayData.subtitle) {
+          $container.append(`
+            <div class="mb-4">
+              <h3 class="text-lg sm:text-xl font-bold text-white mb-1">${dayData.title}</h3>
+              ${dayData.subtitle ? `<p class="text-xs sm:text-sm text-slate-400">${dayData.subtitle}</p>` : ''}
+            </div>
+          `);
+        }
+
+        // Vertical List Container
+        const $list = $('<div class="flex flex-col space-y-3"></div>');
+
+        dayData.links.forEach(link => {
+          const iconSvg = getResourceIcon(link.type);
+
+          const $item = $(`
+            <a href="${link.href}" target="_blank" rel="noopener noreferrer" class="glass-list-item rounded-xl p-4 sm:p-5 flex items-center justify-between gap-4 group">
+              <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div class="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/60 group-hover:border-purple-500/50 transition-colors shrink-0">
+                  ${iconSvg}
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-base sm:text-lg font-bold text-white group-hover:text-cyan-300 transition-colors truncate">
+                    ${link.name}
+                  </h4>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 text-xs font-semibold text-cyan-400 group-hover:text-cyan-300 transition-colors shrink-0 pl-2">
+                <span class="hidden sm:inline">Open</span>
+                <svg class="w-4 h-4 text-slate-400 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </div>
+            </a>
+          `);
+          $list.append($item);
+        });
+
+        $container.append($list);
+      }
+
+      // Handle Browser Back / Forward buttons
+      window.onpopstate = function(e) {
+        const query = getQueryParams();
+        if (!currentWeekData || currentWeekData.week !== query.week) {
+          loadWeekData(query.week, query.day, true);
+        } else {
+          renderDayHeaderAndPills(currentWeekData, query.day);
+          renderDayContent(currentWeekData, query.day);
+        }
+      };
+
+      // Start application
+      initPortal();
+    });
+  </script>
+</body>
+</html>

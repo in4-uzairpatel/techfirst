@@ -1,0 +1,27 @@
+{
+  "headerFile": "json/header.json",
+  "badge": "Student Workshop Portal",
+  "title": "Workshop Portal",
+  "subtitle": "Select a day below to access your guides, tasks, and live tools.",
+  "logoHeightRem": 3,
+  "logos": [
+    {
+      "src": "assets/ukgov.png",
+      "alt": "UK Government Logo"
+    },
+    {
+      "src": "assets/tf.png",
+      "alt": "TechFirst Logo"
+    },
+    {
+      "src": "assets/IN4_Logo_Group_White_RGB.png",
+      "alt": "IN4 Group Logo"
+    },
+    {
+      "src": "assets/MEGA_Logos_RGB_Primary_White_SolidLine.png",
+      "alt": "MEGA Logo"
+    }
+  ],
+  "defaultWeek": 1,
+  "defaultDay": 1
+}

@@ -1,0 +1,57 @@
+{
+  "week": 2,
+  "title": "Week 2: Core Skills & Practice",
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1: Advanced Workflows",
+      "subtitle": "Building robust solutions and collaboration",
+      "links": [
+        {
+          "name": "Collaborative Development",
+          "href": "https://github.com",
+          "type": "workshop"
+        },
+        {
+          "name": "Kahoot Git Mastery",
+          "href": "https://kahoot.it/join",
+          "type": "quiz"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: Architecture & Design",
+      "subtitle": "Structuring scalable applications",
+      "links": [
+        {
+          "name": "UI/UX & Design Patterns",
+          "href": "https://figma.com",
+          "type": "design"
+        },
+        {
+          "name": "Resource Links",
+          "href": "https://developer.mozilla.org",
+          "type": "resource"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Mid-Program Challenge",
+      "subtitle": "Group project build sprint & demo",
+      "links": [
+        {
+          "name": "Sprint Challenge Guidelines",
+          "href": "https://docs.google.com",
+          "type": "doc"
+        },
+        {
+          "name": "Submission Portal",
+          "href": "https://forms.google.com",
+          "type": "form"
+        }
+      ]
+    }
+  ]
+}
