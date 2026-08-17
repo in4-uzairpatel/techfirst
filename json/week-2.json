@@ -1,55 +1,41 @@
 {
   "week": 2,
-  "title": "Week 2: Core Skills & Practice",
+  "title": "Week 2: AI Digital Champion",
   "days": [
     {
       "day": 1,
-      "title": "Day 1: Advanced Workflows",
-      "subtitle": "Building robust solutions and collaboration",
+      "title": "Day 1: Support Ticket Classifier",
+      "subtitle": "Train a text classifier using Machine Learning for Kids & IT Helpdesk data",
       "links": [
         {
-          "name": "Collaborative Development",
-          "href": "https://github.com",
+          "name": "Machine Learning for Kids",
+          "href": "https://machinelearningforkids.co.uk/",
+          "type": "resource"
+        },
+        {
+          "name": "Student Guide: Support Ticket Classifier",
+          "href": "./w2d1-guide.html",
           "type": "workshop"
         },
         {
-          "name": "Kahoot Git Mastery",
-          "href": "https://kahoot.it/join",
-          "type": "quiz"
-        }
-      ]
-    },
-    {
-      "day": 2,
-      "title": "Day 2: Architecture & Design",
-      "subtitle": "Structuring scalable applications",
-      "links": [
-        {
-          "name": "UI/UX & Design Patterns",
-          "href": "https://figma.com",
-          "type": "design"
+          "name": "IT Helpdesk CSV Dataset Viewer",
+          "href": "./csv-viewer.html",
+          "type": "workshop"
         },
         {
-          "name": "Resource Links",
-          "href": "https://developer.mozilla.org",
-          "type": "resource"
-        }
-      ]
-    },
-    {
-      "day": 3,
-      "title": "Day 3: Mid-Program Challenge",
-      "subtitle": "Group project build sprint & demo",
-      "links": [
-        {
-          "name": "Sprint Challenge Guidelines",
-          "href": "https://docs.google.com",
+          "name": "Documents — Blackburn",
+          "href": "./documents-blackburn.html",
           "type": "doc"
         },
         {
-          "name": "Submission Portal",
-          "href": "https://forms.google.com",
-          "type": "form"
+          "name": "Documents — Blackpool",
+          "href": "./documents-blackpool.html",
+          "type": "doc"
+        },
+        {
+          "name": "Documents — Wigan",
+          "href": "./documents-wigan.html",
+          "type": "doc"
         }
       ]
     }

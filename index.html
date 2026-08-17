@@ -124,7 +124,7 @@
       // Helper to parse URL Query Parameters
       function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
-        let week = parseInt(params.get('week')) || 1;
+        let week = parseInt(params.get('week')) || 2;
         let day = parseInt(params.get('day')) || 1;
         return { week, day };
       }

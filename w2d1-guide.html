@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Ticket Classifier — Student Step-by-Step Guide | TechFirst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #4E259E;
+    --purple-light: #7147DC;
+    --purple-pale: #F3EFEF;
+    --teal-deep: #0C6382;
+    --teal-light: #5ED1DD;
+    --teal-pale: #9EEEF2;
+    --neutral-bg: #F5F6F8;
+    --neutral-border: #E2E8F0;
+    --neutral-grey: #64748B;
+    --neutral-black: #0F172A;
+    --white: #FFFFFF;
+    --accent-green: #10B981;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: linear-gradient(160deg, var(--neutral-bg) 0%, #EDEBFA 55%, var(--teal-pale) 130%);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    color: var(--neutral-black);
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4, .font-heading {
+    font-family: "Outfit", sans-serif;
+  }
+  .stage {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px 48px;
+  }
+  .container {
+    width: 100%; max-width: 860px;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--purple-deep); font-weight: 700; text-decoration: none;
+    font-size: 14px; background: var(--white); padding: 8px 18px;
+    border-radius: 999px; box-shadow: 0 2px 10px rgba(78,37,158,0.12);
+    transition: all 0.2s ease;
+  }
+  .back-link:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 4px 14px rgba(78,37,158,0.22);
+  }
+  
+  .logos-row {
+    display: flex; align-items: center; gap: 16px; justify-content: flex-end;
+  }
+  .logos-row img {
+    height: 32px; width: auto; object-fit: contain;
+  }
+
+  .panel {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: 0 16px 36px rgba(15,23,42,0.08);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .panel::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+    background: linear-gradient(90deg, var(--purple-deep), var(--teal-light));
+  }
+
+  .kicker {
+    text-transform: uppercase; letter-spacing: 0.12em; font-size: 13px;
+    font-weight: 800; color: var(--purple-light); margin-bottom: 6px;
+  }
+  h1.title {
+    font-size: clamp(28px, 5vw, 40px); font-weight: 800;
+    color: var(--purple-deep); margin: 0 0 6px; line-height: 1.15;
+  }
+  .meta-tag {
+    display: inline-block; font-size: 14px; font-weight: 600;
+    color: var(--neutral-grey); margin-bottom: 24px;
+  }
+  
+  .hero-box {
+    background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+    color: #F8FAFC;
+    border-radius: 18px; padding: 24px 28px; margin-bottom: 32px;
+    box-shadow: 0 8px 20px rgba(30,27,75,0.2);
+  }
+  .hero-box h3 {
+    text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px;
+    font-weight: 800; color: var(--teal-light); margin: 0 0 8px;
+  }
+  .hero-box p {
+    margin: 0; font-size: 15.5px; line-height: 1.6; color: #E2E8F0;
+  }
+
+  .section-title {
+    font-size: 22px; font-weight: 800; color: var(--purple-deep);
+    margin: 32px 0 16px; display: flex; align-items: center; gap: 8px;
+    border-bottom: 2px solid #F1F5F9; padding-bottom: 10px;
+  }
+  .section-title span.chevron {
+    color: var(--teal-deep);
+  }
+
+  .step-list {
+    list-style: none; padding: 0; margin: 0 0 28px;
+  }
+  .step-item {
+    display: flex; gap: 16px; margin-bottom: 18px; align-items: flex-start;
+  }
+  .step-number {
+    background: var(--purple-deep); color: var(--white);
+    font-family: "Outfit", sans-serif; font-weight: 800; font-size: 15px;
+    min-width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    shrink: 0; margin-top: 2px;
+    box-shadow: 0 4px 10px rgba(78,37,158,0.25);
+  }
+  .step-content {
+    flex: 1; font-size: 15px; color: #334155; line-height: 1.6;
+  }
+  .step-content strong {
+    color: var(--neutral-black); font-weight: 700;
+  }
+  .step-content a {
+    color: var(--purple-light); font-weight: 700; text-decoration: underline;
+  }
+  .step-note {
+    font-size: 13.5px; color: var(--neutral-grey); font-style: italic; margin-top: 4px;
+  }
+
+  /* Buckets graphic */
+  .buckets-preview {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;
+    margin: 24px 0 32px;
+  }
+  .bucket-card {
+    background: #F8FAFC; border: 2px dashed #CBD5E1; border-radius: 16px;
+    padding: 20px 16px; text-align: center; position: relative;
+    transition: border-color 0.2s;
+  }
+  .bucket-card:hover {
+    border-color: var(--purple-light); background: #FAF5FF;
+  }
+  .bucket-card h4 {
+    margin: 0 0 12px; font-size: 15px; font-weight: 800; color: var(--purple-deep);
+    background: #EDE9FE; padding: 6px 12px; border-radius: 999px; display: inline-block;
+  }
+  .bucket-btn {
+    font-size: 12px; font-weight: 700; color: var(--neutral-grey);
+    background: var(--white); border: 1px solid var(--neutral-border);
+    padding: 6px 12px; border-radius: 8px; margin-top: 20px; display: inline-block;
+  }
+
+  /* Table styling */
+  .examples-table-container {
+    overflow-x: auto; margin: 20px 0 28px; border-radius: 16px;
+    border: 1px solid var(--neutral-border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .examples-table {
+    width: 100%; border-collapse: collapse; background: var(--white); text-align: left;
+  }
+  .examples-table th {
+    background: var(--purple-deep); color: var(--white);
+    font-family: "Outfit", sans-serif; font-size: 14.5px; font-weight: 700;
+    padding: 14px 16px; border-right: 1px solid rgba(255,255,255,0.15);
+  }
+  .examples-table th:last-child { border-right: none; }
+  .examples-table td {
+    padding: 14px 16px; font-size: 14px; color: #334155;
+    border-bottom: 1px solid var(--neutral-border); border-right: 1px solid var(--neutral-border);
+    vertical-align: top; line-height: 1.5;
+  }
+  .examples-table td:last-child { border-right: none; }
+  .examples-table tr:last-child td { border-bottom: none; }
+  .examples-table tr:nth-child(even) { background: #F8FAFC; }
+  
+  .copy-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 8px; font-size: 11.5px; font-weight: 700; color: var(--teal-deep);
+    background: #E0F2FE; border: none; padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .copy-chip:hover { background: #BAE6FD; }
+
+  .callout-box {
+    background: #F0FDF4; border-left: 4px solid var(--accent-green);
+    border-radius: 14px; padding: 20px 24px; margin: 28px 0;
+  }
+  .callout-box h3 {
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px;
+    font-weight: 800; color: #15803D; margin: 0 0 8px;
+  }
+  .callout-box p {
+    margin: 0; font-size: 14.5px; line-height: 1.6; color: #166534;
+  }
+
+  .callout-purple {
+    background: #FAF5FF; border-left: 4px solid var(--purple-light);
+    border-radius: 14px; padding: 20px 24px; margin: 28px 0;
+  }
+  .callout-purple h3 {
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px;
+    font-weight: 800; color: var(--purple-deep); margin: 0 0 8px;
+  }
+  .callout-purple p {
+    margin: 0; font-size: 14.5px; line-height: 1.6; color: #4C1D95;
+  }
+
+  .tips-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+    margin: 20px 0 28px;
+  }
+  .tip-card {
+    background: #F8FAFC; border: 1px solid var(--neutral-border); border-radius: 16px;
+    padding: 20px;
+  }
+  .tip-card h4 {
+    margin: 0 0 8px; font-size: 16px; font-weight: 700; color: var(--purple-deep);
+  }
+  .tip-card p {
+    margin: 0; font-size: 13.5px; color: #475569; line-height: 1.55;
+  }
+
+  /* Floating Toast notification */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px; background: #0F172A; color: #FFF;
+    padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px);
+    transition: all 0.3s ease; pointer-events: none; z-index: 100;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="container">
+    
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <a href="./index.html?week=2&day=1" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Workshop Portal
+      </a>
+      <div class="logos-row">
+        <img src="assets/tf.png" alt="TechFirst Logo">
+        <img src="assets/IN4_Logo_Group_White_RGB.png" alt="IN4 Group Logo" style="filter: brightness(0.2);">
+        <img src="assets/MEGA_Logos_RGB_Primary_White_SolidLine.png" alt="MEGA Logo" style="filter: brightness(0.2);">
+      </div>
+    </div>
+
+    <!-- Main Guide Panel -->
+    <div class="panel">
+      <div class="kicker">Student Step-by-Step Guide</div>
+      <h1 class="title">Support Ticket Classifier</h1>
+      <div class="meta-tag">Week 2, Day 1 · AI Digital Champion</div>
+
+      <!-- Hero Banner -->
+      <div class="hero-box">
+        <h3>What You're Building</h3>
+        <p>You're going to train a computer to sort real support messages into categories — the same kind of triage a real support team does every day, before a person even reads the message. You'll teach it by giving it examples of real tickets, sorted into the right category.</p>
+      </div>
+
+      <!-- Part 1 -->
+      <h2 class="section-title">
+        <span class="chevron">❯</span> Part 1: Collect your examples
+      </h2>
+
+      <ol class="step-list">
+        <li class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            You'll need example support tickets for this project. A starter set is provided below — you'll add your own once you've got the pattern, based on your own organisation from Day 1. There is also a bigger dataset available in the portal that you can take examples from.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            Go to <a href="https://machinelearningforkids.co.uk/" target="_blank" rel="noopener">https://machinelearningforkids.co.uk/</a>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            Click on <strong>“Get Started”</strong>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            Click on <strong>“Try It Now”</strong> to continue without logging in.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            Click on <strong>“Projects”</strong> on the top menu bar.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            Click the <strong>“+ Add a new project”</strong> button.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">7</div>
+          <div class="step-content">
+            Name your project (e.g. <strong>“Support Ticket Classifier”</strong>) and set it to learn how to <strong>“Recognise Text”</strong>. Click <strong>“Create”</strong>.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">8</div>
+          <div class="step-content">
+            Your project should be in your projects list. Click on it.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">9</div>
+          <div class="step-content">
+            Start by collecting examples of tickets to train the computer with. Click the <strong>“Train”</strong> button to get started.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">10</div>
+          <div class="step-content">
+            Click on <strong>“+ Add new label”</strong> and call it <code>Technical_Issue</code>.<br>
+            Do that again, and create labels for <code>Account_or_Access</code> and <code>General_Enquiry</code>.<br>
+            <div class="step-note">If you want an extra challenge, add one more category of your own.</div>
+          </div>
+        </li>
+      </ol>
+
+      <!-- Category Buckets Visual Preview -->
+      <div class="buckets-preview">
+        <div class="bucket-card">
+          <h4>Technical_Issue</h4>
+          <br>
+          <span class="bucket-btn">+ Add example</span>
+        </div>
+        <div class="bucket-card">
+          <h4>Account_or_Access</h4>
+          <br>
+          <span class="bucket-btn">+ Add example</span>
+        </div>
+        <div class="bucket-card">
+          <h4>General_Enquiry</h4>
+          <br>
+          <span class="bucket-btn">+ Add example</span>
+        </div>
+      </div>
+
+      <!-- Part 2 -->
+      <h2 class="section-title">
+        <span class="chevron">❯</span> Part 2: Add your training examples
+      </h2>
+
+      <ol class="step-list">
+        <li class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            Click <strong>“Add example”</strong> in the Technical Issue bucket. Type in a ticket, click <strong>“Add”</strong>.<br>
+            <div class="step-note">Try: “My laptop keeps freezing every time I open two windows at once.”</div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            Add a second Technical Issue example.<br>
+            <div class="step-note">Try: “The printer says it's connected but nothing comes out when I send a job.”</div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            Keep going, collecting examples for all three categories. Here are starter examples you can copy directly:
+          </div>
+        </li>
+      </ol>
+
+      <!-- Starter Examples Table -->
+      <div class="examples-table-container">
+        <table class="examples-table">
+          <thead>
+            <tr>
+              <th>Technical Issue</th>
+              <th>Account or Access</th>
+              <th>General Enquiry</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                “This app crashes every time I try to save my work.”
+                <br>
+                <button class="copy-chip" onclick="copyText('This app crashes every time I try to save my work.')">📋 Copy</button>
+              </td>
+              <td>
+                “I can't log in — it says my password's wrong even though I know it's right.”
+                <br>
+                <button class="copy-chip" onclick="copyText(`I can't log in — it says my password's wrong even though I know it's right.`)">📋 Copy</button>
+              </td>
+              <td>
+                “What time does the helpdesk close today?”
+                <br>
+                <button class="copy-chip" onclick="copyText('What time does the helpdesk close today?')">📋 Copy</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                “My screen keeps freezing for a few seconds, only when this one app is open.”
+                <br>
+                <button class="copy-chip" onclick="copyText('My screen keeps freezing for a few seconds, only when this one app is open.')">📋 Copy</button>
+              </td>
+              <td>
+                “I've been locked out after too many failed login attempts.”
+                <br>
+                <button class="copy-chip" onclick="copyText(`I've been locked out after too many failed login attempts.`)">📋 Copy</button>
+              </td>
+              <td>
+                “Do you have a guide for setting up email on a new phone?”
+                <br>
+                <button class="copy-chip" onclick="copyText('Do you have a guide for setting up email on a new phone?')">📋 Copy</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                “The printer says 'ready' but nothing happens when I send a job.”
+                <br>
+                <button class="copy-chip" onclick="copyText(`The printer says 'ready' but nothing happens when I send a job.`)">📋 Copy</button>
+              </td>
+              <td>
+                “My account says I don't have permission to access this folder anymore.”
+                <br>
+                <button class="copy-chip" onclick="copyText(`My account says I don't have permission to access this folder anymore.`)">📋 Copy</button>
+              </td>
+              <td>
+                “How do I request a new starter's account to be set up?”
+                <br>
+                <button class="copy-chip" onclick="copyText(`How do I request a new starter's account to be set up?`)">📋 Copy</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-size: 14px; color: #475569;">
+        Once you've got the pattern, swap in real examples based on your own Day 1 organisation — aim for at least <strong>6–8 examples per category</strong>.
+      </p>
+      <p style="font-size: 14px; color: #475569;">
+        💡 Check the <strong>IT Helpdesk Tickets CSV Dataset Viewer</strong> in the portal to extract and categorise real ticket examples to speed your progress up — just make sure each example is placed in the appropriate label!
+      </p>
+
+      <!-- Part 3 -->
+      <h2 class="section-title">
+        <span class="chevron">❯</span> Part 3: Train and test
+      </h2>
+
+      <ol class="step-list">
+        <li class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            When you've collected enough examples, click on <strong>“&lt; Back to project”</strong>.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            Click on <strong>“Learn &amp; Test”</strong>.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            Click the <strong>“Train new machine learning model”</strong> button.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            Wait for training to complete — this can take a few minutes.
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            Once training's done, a Test box appears. Try it with a ticket you haven't shown the computer before.<br>
+            <div class="step-note">It will tell you what category it thinks the ticket belongs to, and how confident it is.</div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            Not happy with how it's sorting things? Go back to Part 2, add more examples — especially for whichever category it keeps getting wrong — then repeat Part 3 to retrain the model with the additional data.
+          </div>
+        </li>
+      </ol>
+
+      <!-- Callout: What Have You Done So Far -->
+      <div class="callout-purple">
+        <h3>What Have You Done So Far?</h3>
+        <p>You've started to train a computer to recognise the difference between technical problems, account and access issues, and general questions. These examples are being used to train a machine learning model — this is called <strong>‘supervised learning’</strong>, because of the way you're supervising the computer's training. The computer learns from patterns in the examples you've given it: the words used, and how the message is phrased. Don't worry if your model gets things wrong early on — with only a handful of examples per category, it hasn't had much to learn from yet. A real support team's classifier would be trained on hundreds or thousands of real tickets.</p>
+      </div>
+
+      <!-- Tips Section -->
+      <h2 class="section-title">
+        <span class="chevron">❯</span> Tips
+      </h2>
+
+      <div class="tips-grid">
+        <div class="tip-card">
+          <h4>More examples!</h4>
+          <p>The more examples you give it, the better the computer gets at recognising what tickets in the same category have in common.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Try and be even</h4>
+          <p>Aim for roughly the same number of examples in each category. If one category has far more examples than the others, the computer may learn that category is simply more likely — which will skew its predictions, not just its accuracy.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Stuck for examples?</h4>
+          <p>Think about real messages you've actually seen, sent, or heard about — or ask your team what's come up for their organisation. If you're genuinely stuck, that's exactly what the Stuck Protocol is for: try one strategy yourself, then ask a peer, then ask your coach.</p>
+        </div>
+      </div>
+
+      <!-- Callout: What Have You Done -->
+      <div class="callout-box">
+        <h3>What Have You Done?</h3>
+        <p>You've trained a machine learning model to sort real support tickets into categories — genuinely the same kind of thing an AI &amp; Automation Practitioner gets asked to build in a real workplace, just at a smaller scale. You've seen that doing this well takes real, balanced examples, and that a model is only ever as good as the data behind it. That's true for this classifier, and it's true for every AI tool you'll use from here on.</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="toast">Copied to clipboard!</div>
+
+<script>
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
