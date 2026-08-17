@@ -90,6 +90,28 @@
           "type": "doc"
         }
       ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Location Documents",
+      "subtitle": "Access document templates for Blackburn, Blackpool, and Wigan",
+      "links": [
+        {
+          "name": "Documents — Blackburn",
+          "href": "./documents-blackburn.html",
+          "type": "doc"
+        },
+        {
+          "name": "Documents — Blackpool",
+          "href": "./documents-blackpool.html",
+          "type": "doc"
+        },
+        {
+          "name": "Documents — Wigan",
+          "href": "./documents-wigan.html",
+          "type": "doc"
+        }
+      ]
     }
   ]
 }
