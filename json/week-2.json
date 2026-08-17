@@ -38,6 +38,58 @@
           "type": "doc"
         }
       ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: AI Budget & Prompt Privacy",
+      "subtitle": "Prioritise AI opportunities with token budgets & explore Prompt Privacy guidelines",
+      "links": [
+        {
+          "name": "AI Budget Opportunity Bank — Blackburn",
+          "href": "./opportunity-bank-blackburn.html",
+          "type": "workshop"
+        },
+        {
+          "name": "AI Budget Opportunity Bank — Blackpool",
+          "href": "./opportunity-bank-blackpool.html",
+          "type": "workshop"
+        },
+        {
+          "name": "AI Budget Opportunity Bank — Wigan",
+          "href": "./opportunity-bank-wigan.html",
+          "type": "workshop"
+        },
+        {
+          "name": "Prompt Privacy — Blackburn",
+          "href": "https://canva.link/id4k99kz6l0a763",
+          "type": "doc"
+        },
+        {
+          "name": "Prompt Privacy — Blackpool",
+          "href": "https://canva.link/f4hykyouih8j723",
+          "type": "doc"
+        },
+        {
+          "name": "Prompt Privacy — Wigan",
+          "href": "https://canva.link/x3p12qzjvsnaoin",
+          "type": "doc"
+        },
+        {
+          "name": "Documents — Blackburn",
+          "href": "./documents-blackburn.html",
+          "type": "doc"
+        },
+        {
+          "name": "Documents — Blackpool",
+          "href": "./documents-blackpool.html",
+          "type": "doc"
+        },
+        {
+          "name": "Documents — Wigan",
+          "href": "./documents-wigan.html",
+          "type": "doc"
+        }
+      ]
     }
   ]
 }

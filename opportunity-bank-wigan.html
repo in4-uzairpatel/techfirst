@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Budget Opportunity Bank — Wigan | TechFirst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #4E259E;
+    --purple-light: #7147DC;
+    --teal-deep: #0C6382;
+    --teal-light: #5ED1DD;
+    --teal-pale: #9EEEF2;
+    --neutral-bg: #F5F6F8;
+    --neutral-border: #E2E8F0;
+    --neutral-grey: #64748B;
+    --neutral-black: #0F172A;
+    --white: #FFFFFF;
+    --amber: #F59E0B;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: linear-gradient(160deg, var(--neutral-bg) 0%, #EDEBFA 55%, var(--teal-pale) 130%);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    color: var(--neutral-black);
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4, .font-heading {
+    font-family: "Outfit", sans-serif;
+  }
+  .stage {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px 48px;
+  }
+  .container {
+    width: 100%; max-width: 880px;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--purple-deep); font-weight: 700; text-decoration: none;
+    font-size: 14px; background: var(--white); padding: 8px 18px;
+    border-radius: 999px; box-shadow: 0 2px 10px rgba(78,37,158,0.12);
+    transition: all 0.2s ease;
+  }
+  .back-link:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 4px 14px rgba(78,37,158,0.22);
+  }
+  
+  .logos-row {
+    display: flex; align-items: center; gap: 16px; justify-content: flex-end;
+  }
+  .logos-row img {
+    height: 32px; width: auto; object-fit: contain;
+  }
+
+  .panel {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: 0 16px 36px rgba(15,23,42,0.08);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .panel::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+    background: linear-gradient(90deg, var(--purple-deep), var(--teal-light));
+  }
+
+  .kicker {
+    text-transform: uppercase; letter-spacing: 0.12em; font-size: 13px;
+    font-weight: 800; color: var(--purple-light); margin-bottom: 6px;
+  }
+  h1.title {
+    font-size: clamp(28px, 5vw, 40px); font-weight: 800;
+    color: var(--purple-deep); margin: 0 0 6px; line-height: 1.15;
+  }
+  .meta-tag {
+    display: inline-block; font-size: 14px; font-weight: 600;
+    color: var(--neutral-grey); margin-bottom: 24px;
+  }
+
+  /* Activity Instructions Grid */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;
+    margin-bottom: 28px;
+  }
+  .info-card {
+    background: #F8FAFC; border: 1px solid var(--neutral-border); border-radius: 16px; padding: 20px;
+  }
+  .info-card h3 {
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px;
+    font-weight: 800; color: var(--purple-deep); margin: 0 0 8px;
+  }
+  .info-card p, .info-card ul {
+    margin: 0; font-size: 14px; color: #334155; line-height: 1.55; padding-left: 0; list-style-position: inside;
+  }
+
+  .callout-gold {
+    background: #FFFBEB; border-left: 4px solid var(--amber);
+    border-radius: 14px; padding: 20px 24px; margin: 24px 0;
+  }
+  .callout-gold h3 {
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px;
+    font-weight: 800; color: #B45309; margin: 0 0 6px;
+  }
+  .callout-gold p {
+    margin: 0; font-size: 14px; color: #92400E; line-height: 1.55;
+  }
+
+  /* Employer Section & Token Table */
+  .employer-block {
+    margin-top: 36px; pt-6; border-top: 2px dashed #E2E8F0;
+  }
+  .employer-header {
+    margin-bottom: 16px;
+  }
+  .employer-name {
+    font-size: 24px; font-weight: 800; color: var(--purple-deep); margin: 0 0 4px;
+  }
+  .employer-sub {
+    font-size: 13.5px; font-weight: 600; color: var(--neutral-grey); margin: 0;
+  }
+
+  .opportunity-table {
+    width: 100%; border-collapse: collapse; margin-top: 12px; background: var(--white);
+    border-radius: 16px; overflow: hidden; border: 1px solid var(--neutral-border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .opportunity-table th {
+    background: var(--purple-deep); color: var(--white);
+    font-family: "Outfit", sans-serif; font-size: 13.5px; font-weight: 700;
+    padding: 12px 16px; text-align: left;
+  }
+  .opportunity-table td {
+    padding: 12px 16px; font-size: 14px; color: #334155;
+    border-bottom: 1px solid var(--neutral-border); vertical-align: top;
+  }
+  .opportunity-table tr:last-child td { border-bottom: none; }
+  .opportunity-table tr:nth-child(even) { background: #F8FAFC; }
+  
+  .dept-badge {
+    display: inline-block; font-size: 12px; font-weight: 700; color: var(--teal-deep);
+    background: #E0F2FE; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+  }
+
+  /* Interactive Token Button */
+  .token-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #F1F5F9; border: 1px solid #CBD5E1; color: #64748B;
+    font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
+    cursor: pointer; transition: all 0.2s ease; user-select: none;
+  }
+  .token-btn:hover {
+    border-color: var(--purple-light); background: #EDE9FE; color: var(--purple-deep);
+  }
+  .token-btn.active {
+    background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+    border-color: #6D28D9; color: var(--white);
+    box-shadow: 0 4px 12px rgba(109,40,217,0.3);
+  }
+
+  /* Floating Token Bar */
+  .token-bar {
+    position: fixed; bottom: 20px; right: 20px; z-index: 40;
+    background: #0F172A; color: var(--white); padding: 14px 20px; border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);
+    display: flex; items-center; gap: 16px; backdrop-filter: blur(12px);
+  }
+  .token-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%; background: #334155; color: #94A3B8;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px;
+    transition: all 0.2s;
+  }
+  .token-pill.active {
+    background: #10B981; color: var(--white); box-shadow: 0 0 12px rgba(16,185,129,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="container">
+    
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <a href="./index.html?week=2&day=2" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Workshop Portal
+      </a>
+      <div class="logos-row">
+        <img src="assets/tf.png" alt="TechFirst Logo">
+        <img src="assets/IN4_Logo_Group_White_RGB.png" alt="IN4 Group Logo" style="filter: brightness(0.2);">
+        <img src="assets/MEGA_Logos_RGB_Primary_White_SolidLine.png" alt="MEGA Logo" style="filter: brightness(0.2);">
+      </div>
+    </div>
+
+    <!-- Main Panel -->
+    <div class="panel">
+      <div class="kicker">Week 2, Day 2 · Block 1 · AI Digital Champion</div>
+      <h1 class="title">AI Budget Opportunity Bank — Wigan</h1>
+      <div class="meta-tag">10 Everyday AI Opportunities Per Organisation · 5 Token Budget</div>
+
+      <!-- Activity Overview Cards -->
+      <div class="grid-2">
+        <div class="info-card">
+          <h3>Purpose</h3>
+          <p>Each team gets an opportunity list built specifically for their Day 1 employer. You only get 5 AI tokens. Argue and decide which 5 opportunities matter most to your organisation!</p>
+        </div>
+        <div class="info-card">
+          <h3>Prep &amp; Rules</h3>
+          <ul>
+            <li>Match your team to your Day 1 organisation.</li>
+            <li>You have exactly 5 AI Tokens per team.</li>
+            <li>Discuss, debate, and allocate your 5 tokens below!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-card" style="margin-bottom: 24px;">
+        <h3>Run Sheet</h3>
+        <p>1. Read all points for your employer.<br>
+           2. Discuss and allocate your 5 AI tokens on the ones that save the most time or avoid the biggest risk.<br>
+           3. Pair with another team, present your top 2 picks, and defend your choice!<br>
+           <em>“You can't fix everything at once in a real job either — so what actually goes first, and why?”</em>
+        </p>
+      </div>
+
+      <div class="callout-gold">
+        <h3>Golden-Thread Note (Pitch Slide 4 Material)</h3>
+        <p>Keep your final top-5 list! This is genuine material for Slide 4 of your final pitch (<em>‘The idea, and where AI helps’</em>) in Week 3, Day 2.</p>
+      </div>
+
+      <!-- Wigan Employer 1: Heinz — Kraft Heinz, Kitt Green -->
+      <div class="employer-block" style="border-top: none;">
+        <div class="employer-header">
+          <h2 class="employer-name">Heinz — Kraft Heinz, Kitt Green</h2>
+          <p class="employer-sub">Food manufacturing · Kitt Green, Wigan</p>
+        </div>
+
+        <table class="opportunity-table">
+          <thead>
+            <tr>
+              <th style="width: 22%;">Department</th>
+              <th>Everyday Problem / Opportunity</th>
+              <th style="width: 15%; text-align: center;">AI Token</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="dept-badge">Production Ops</span></td>
+              <td>A line running slightly slower than usual doesn't get flagged until the shift's already over</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Production Ops</span></td>
+              <td>New starters take weeks to learn which line noises are normal and which need reporting</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Production Ops</span></td>
+              <td>Shift handover notes get skimmed, not really read, so small issues carry over unnoticed</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Quality &amp; Safety</span></td>
+              <td>Tracing a failed batch back to its cause means manually checking several different logs</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Quality &amp; Safety</span></td>
+              <td>The same quality issue gets investigated from scratch each time, without anyone spotting the pattern</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Quality &amp; Safety</span></td>
+              <td>Ingredient batch records are checked reactively, only once something's already gone wrong</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Supply Chain</span></td>
+              <td>A delivery delay is only noticed once production is already waiting on it</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Supply Chain</span></td>
+              <td>Stock levels get checked on a fixed schedule, not when they're actually running low</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">IT &amp; Systems</span></td>
+              <td>The same login issue gets reported separately by different shift workers before anyone spots the pattern</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">IT &amp; Systems</span></td>
+              <td>New joiners ask the same basic IT questions every week, answered from scratch each time</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Wigan Employer 2: Wigan Council -->
+      <div class="employer-block">
+        <div class="employer-header">
+          <h2 class="employer-name">Wigan Council</h2>
+          <p class="employer-sub">Local Authority · Unitary Authority covering Wigan</p>
+        </div>
+
+        <table class="opportunity-table">
+          <thead>
+            <tr>
+              <th style="width: 22%;">Department</th>
+              <th>Everyday Problem / Opportunity</th>
+              <th style="width: 15%; text-align: center;">AI Token</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="dept-badge">Housing</span></td>
+              <td>A resident's application sits without an update for weeks before anyone proactively checks in</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Housing</span></td>
+              <td>The same housing question gets answered from scratch by different officers, every time</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Housing</span></td>
+              <td>Nobody notices a case has stalled until the resident calls to chase it</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Customer Services</span></td>
+              <td>Callers get transferred more than once because the first person couldn't tell where the query belonged</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Customer Services</span></td>
+              <td>The same handful of questions get asked over and over, answered from scratch each time</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Customer Services</span></td>
+              <td>A resident's frustration builds up over a call, but nobody catches it in time to change approach</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Adult Social Care</span></td>
+              <td>A referral's urgency isn't always obvious from the notes alone, so triage takes real time</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Adult Social Care</span></td>
+              <td>A missed visit isn't flagged until a family member calls to ask what happened</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">IT &amp; Systems</span></td>
+              <td>A system outage affects several staff before anyone realises it's not just one person's problem</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">IT &amp; Systems</span></td>
+              <td>New starters wait days for their accounts and access to be fully set up</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Wigan Employer 3: Agilisys -->
+      <div class="employer-block">
+        <div class="employer-header">
+          <h2 class="employer-name">Agilisys</h2>
+          <p class="employer-sub">Digital transformation &amp; AI for local government · Wigan town centre</p>
+        </div>
+
+        <table class="opportunity-table">
+          <thead>
+            <tr>
+              <th style="width: 22%;">Department</th>
+              <th>Everyday Problem / Opportunity</th>
+              <th style="width: 15%; text-align: center;">AI Token</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="dept-badge">Client Delivery</span></td>
+              <td>A client's access request sits in an inbox until someone happens to notice it</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Client Delivery</span></td>
+              <td>Project status updates get written from scratch each time a client asks</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Client Delivery</span></td>
+              <td>A quiet week from a project lead isn't flagged as a risk until a client asks what's going on</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">AI &amp; Product Dev</span></td>
+              <td>An odd AI suggestion gets reported by a caseworker, but tracing back why it happened takes real digging</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">AI &amp; Product Dev</span></td>
+              <td>Patterns in flagged AI errors aren't spotted until enough of them pile up</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">AI &amp; Product Dev</span></td>
+              <td>Testing a model against genuinely messy real-world data happens later than it probably should</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Data &amp; Analytics</span></td>
+              <td>A simple usage report takes hours to pull together by hand each time it's requested</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Data &amp; Analytics</span></td>
+              <td>A meaningful trend in the data isn't noticed until someone happens to go looking for it</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Internal IT</span></td>
+              <td>A new starter's laptop and accounts aren't always fully ready on day one</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+            <tr>
+              <td><span class="dept-badge">Internal IT</span></td>
+              <td>The same onboarding questions get answered individually, rather than once for everyone</td>
+              <td style="text-align: center;"><button class="token-btn" onclick="toggleToken(this)">🪙 Token</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Floating Token Allocator -->
+<div class="token-bar">
+  <span style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94A3B8;">Tokens Allocated:</span>
+  <div style="display: flex; gap: 6px;">
+    <div class="token-pill" id="tp-1">1</div>
+    <div class="token-pill" id="tp-2">2</div>
+    <div class="token-pill" id="tp-3">3</div>
+    <div class="token-pill" id="tp-4">4</div>
+    <div class="token-pill" id="tp-5">5</div>
+  </div>
+</div>
+
+<script>
+let activeTokens = 0;
+
+function toggleToken(btn) {
+  if (btn.classList.contains('active')) {
+    btn.classList.remove('active');
+    btn.innerHTML = '🪙 Token';
+    activeTokens--;
+  } else {
+    if (activeTokens >= 5) {
+      alert('You have reached your 5 AI Token budget limit for this activity! Deselect an existing token first if you want to swap.');
+      return;
+    }
+    btn.classList.add('active');
+    btn.innerHTML = '✨ Token Spent';
+    activeTokens++;
+  }
+  updatePills();
+}
+
+function updatePills() {
+  for (let i = 1; i <= 5; i++) {
+    const pill = document.getElementById('tp-' + i);
+    if (i <= activeTokens) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  }
+}
+</script>
+
+</body>
+</html>
